@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proxmox One‑Click Deploy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: Inter, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #0d1117;
+      color: #e6edf3;
+    }
+    header {
+      text-align: center;
+      padding: 60px 20px;
+      background: linear-gradient(135deg, #272d37, #0d1117);
+    }
+    h1 {
+      font-size: 2.8rem;
+      margin: 0;
+      font-weight: 700;
+    }
+    p.subtitle {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      margin-top: 10px;
+    }
+    .cards {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding: 40px 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 14px;
+      padding: 25px;
+      width: 280px;
+      text-align: center;
+      transition: 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: #58a6ff;
+    }
+    .card img {
+      width: 48px;
+      margin-bottom: 15px;
+    }
+    .card h3 {
+      margin: 10px 0;
+      font-size: 1.4rem;
+    }
+    .card a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 16px;
+      background: #238636;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+    .card a:hover {
+      background: #2ea043;
+    }
+    footer {
+      text-align: center;
+      opacity: 0.6;
+      padding: 40px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Proxmox One‑Click Deploy</h1>
+    <p class="subtitle">Автоматизация развёртывания VDS, CI/CD, мониторинга и инфраструктуры</p>
+  </header>
+
+  <section class="cards">
+    <div class="card">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub" />
+      <h3>GitHub Repository</h3>
+      <p>Исходники, CI/CD, документация.</p>
+      <a href="#">Перейти</a>
+    </div>
+
+    <div class="card">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gitlab/gitlab-original.svg" alt="GitLab" />
+      <h3>GitLab Mirror</h3>
+      <p>Зеркало + приватный CI/CD pipelines.</p>
+      <a href="#">Перейти</a>
+    </div>
+
+    <div class="card">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker Hub" />
+      <h3>Docker Hub Images</h3>
+      <p>Готовые образы для продакшна.</p>
+      <a href="#">Перейти</a>
+    </div>
+  </section>
+
+  <footer>
+    Proxmox One‑Click Deploy — полностью автоматизированное ядро вашей инфраструктуры.
+  </footer>
+</body>
+</html>
