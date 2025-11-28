@@ -1,0 +1,29 @@
+---
+- name: Ensure apt cache updated
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install base packages
+  apt:
+    name:
+      - zfsutils-linux
+      - python3
+      - python3-pip
+      - qemu-guest-agent
+    state: present
+    update_cache: yes
+
+- name: Create cluster on first host
+  when: inventory_hostname == groups['proxmox'][0]
+  shell: |
+    pvecm create {{ cluster_name }} || true
+  args:
+    warn: false
+
+- name: Join cluster on other hosts
+  when: inventory_hostname != groups['proxmox'][0]
+  shell: |
+    pvecm add {{ hostvars[groups['proxmox'][0]].ansible_host }} --force || true
+  args:
+    warn: false

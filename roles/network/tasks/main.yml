@@ -1,0 +1,23 @@
+---
+- name: Ensure vmbr0 exists (external)
+  command: ip link show vmbr0
+  register: vmbr0_check
+  failed_when: false
+  changed_when: false
+
+- name: Create vmbr0 if missing (simple /etc/network/interfaces approach)
+  when: vmbr0_check.rc != 0
+  block:
+    - name: Create simple /etc/network/interfaces.d/vmbr0
+      copy:
+        dest: /etc/network/interfaces.d/vmbr0
+        content: |
+          auto vmbr0
+          iface vmbr0 inet manual
+            bridge-ports none
+            bridge-stp off
+            bridge-fd 0
+    - name: Restart networking
+      service:
+        name: networking
+        state: restarted

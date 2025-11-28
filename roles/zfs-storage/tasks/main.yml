@@ -1,0 +1,36 @@
+---
+- name: Install zfs utilities
+  apt:
+    name: zfsutils-linux
+    state: present
+    update_cache: yes
+
+- name: Check if zpool exists
+  shell: zpool list {{ zpool_name }}
+  register: zpool_check
+  ignore_errors: true
+
+- name: Create zpool if missing
+  shell: |
+    set -e
+    if ! zpool list {{ zpool_name }} >/dev/null 2>&1; then
+      zpool create -f -o ashift=12 {{ zpool_name }} {{ zfs_disks | join(' ') }}
+    fi
+  args:
+    warn: false
+  when: zpool_check.rc != 0
+
+- name: Create zfs datasets
+  shell: |
+    zfs create -o mountpoint=none {{ zpool_name }}/vm || true
+    zfs create {{ zpool_name }}/vm/data || true
+    zfs create {{ zpool_name }}/backups || true
+  args:
+    warn: false
+
+- name: Register ZFS as Proxmox storage (local)
+  shell: |
+    pvesm status | grep -q {{ vm_default_storage }} || pvesm add zfs {{ vm_default_storage }} --pool {{ zpool_name }} --content images,rootdir
+  args:
+    warn: false
+  ignore_errors: true

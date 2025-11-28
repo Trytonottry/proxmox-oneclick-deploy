@@ -1,0 +1,18 @@
+- name: Full one-click Proxmox setup (cluster, storage, templates, services)
+  hosts: proxmox
+  gather_facts: false
+  serial: 1
+  tasks:
+    - name: Bootstrap cluster (install packages, create cluster)
+      import_playbook: bootstrap-cluster.yml
+
+    - name: Setup ZFS pool(s) and network bridges
+      import_playbook: setup-storage-network.yml
+
+    - name: Upload cloud images and create templates (runs on first master only)
+      run_once: true
+      import_playbook: upload-templates.yml
+
+    - name: Deploy core services (billing, monitoring, traefik)
+      run_once: true
+      import_playbook: deploy-services.yml

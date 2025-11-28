@@ -1,0 +1,42 @@
+proxmox_api_user: root@pam
+proxmox_api_password: "CHANGE_ME_PASSWORD"
+cluster_name: dc-cluster
+
+zpool_name: rpool
+zfs_disks:
+  - /dev/sda
+  - /dev/sdb
+  - /dev/sdc
+  - /dev/sdd
+zfs_raid_level: raidz1
+
+vm_default_storage: rpool/vm
+vm_bridge: vmbr0
+
+cloud_images:
+  - name: ubuntu-24.04
+    url: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
+  - name: debian-12
+    url: "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2"
+
+billing:
+  domain: "panel.example.com"
+  vm:
+    name: billing
+    cores: 2
+    memory: 4096
+    disk: 30
+
+game_defaults:
+  minecraft:
+    cores: 2
+    memory: 4096
+    disk: 20
+    port: 25565
+  factorio:
+    cores: 2
+    memory: 2048
+    disk: 10
+    port: 34197
+
+ssh_pub_key: "ssh-rsa AAAA... yourkey"

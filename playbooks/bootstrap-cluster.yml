@@ -1,0 +1,5 @@
+- name: Bootstrap Proxmox nodes and create cluster
+  hosts: proxmox
+  become: true
+  roles:
+    - proxmox-bootstrap

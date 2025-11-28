@@ -1,0 +1,5 @@
+- name: Download cloud images and create Proxmox templates (run on primary node)
+  hosts: "{{ groups['proxmox'][0] }}"
+  become: true
+  roles:
+    - templates

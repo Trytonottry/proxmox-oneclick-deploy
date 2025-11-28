@@ -1,0 +1,6 @@
+- name: Setup network bridges and ZFS pool
+  hosts: proxmox
+  become: true
+  roles:
+    - network
+    - zfs-storage

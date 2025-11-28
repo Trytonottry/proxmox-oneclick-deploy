@@ -1,0 +1,29 @@
+---
+- name: Ensure template directory exists
+  file:
+    path: /var/lib/vz/template/qemu
+    state: directory
+    mode: '0755'
+
+- name: Download cloud images
+  get_url:
+    url: "{{ item.url }}"
+    dest: "/tmp/{{ item.name }}.img"
+    mode: '0644'
+    force: false
+  loop: "{{ cloud_images }}"
+
+- name: Create template VM from qcow2 (example for each image)
+  shell: |
+    set -e
+    NAME="{{ item.name }}-tmp"
+    VMID=$(pvesh get /cluster/resources --type vm | jq -r '.[].vmid' | sort -n | tail -n1)
+    VMID=$((VMID+1))
+    qm create $VMID --name $NAME --memory 2048 --net0 virtio,bridge={{ vm_bridge }} || true
+    qm importdisk $VMID /tmp/{{ item.name }}.img {{ vm_default_storage }} || true
+    qm set $VMID --scsihw virtio-scsi-pci --scsi0 {{ vm_default_storage }}:vm-$VMID-disk-0 --ide2 {{ vm_default_storage }}:cloudinit --boot c --bootdisk scsi0 || true
+    qm template $VMID || true
+  args:
+    warn: false
+  loop: "{{ cloud_images }}"
+  when: cloud_images is defined

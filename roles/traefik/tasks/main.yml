@@ -1,0 +1,13 @@
+---
+- name: Create traefik VM
+  include_role:
+    name: create-vm
+  vars:
+    vm_name: "traefik"
+    vm_cores: 1
+    vm_memory: 2048
+    vm_disk: 10
+
+- name: Provision Traefik - placeholder for docker-compose
+  debug:
+    msg: "Provision Traefik: copy traefik.yml and start docker-compose (see files in role)."

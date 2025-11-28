@@ -1,0 +1,9 @@
+---
+- name: Create billing VM (wrapper to create-vm role)
+  include_role:
+    name: create-vm
+  vars:
+    vm_name: "{{ billing.vm.name }}"
+    vm_cores: "{{ billing.vm.cores }}"
+    vm_memory: "{{ billing.vm.memory }}"
+    vm_disk: "{{ billing.vm.disk }}"

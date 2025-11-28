@@ -1,0 +1,43 @@
+---
+- name: Create VM from template via Proxmox API (community module if available)
+  community.general.proxmox_kvm:
+    api_user: "{{ proxmox_api_user }}"
+    api_password: "{{ proxmox_api_password }}"
+    api_host: "{{ hostvars[groups['proxmox'][0]].ansible_host }}"
+    vmid: "{{ vmid | default(omit) }}"
+    hostname: "{{ vm_name }}"
+    cores: "{{ vm_cores | default(2) }}"
+    memory: "{{ vm_memory | default(2048) }}"
+    net0: "virtio,bridge={{ vm_bridge }}"
+    scsihw: virtio-scsi-pci
+    ide2: "{{ vm_default_storage }}:cloudinit"
+    sata0: "{{ vm_default_storage }}:{{ vm_disk | default(8) }}G"
+    ostype: l26
+    onboot: true
+    state: present
+  register: proxmox_create
+
+- name: Wait for guest agent info (try multiple times)
+  vars:
+    retries: 20
+    delay: 10
+  shell: |
+    NODE={{ hostvars[groups['proxmox'][0]].ansible_host }}
+    VMID={{ proxmox_create.vmid }}
+    curl -s -k -u "{{ proxmox_api_user }}:{{ proxmox_api_password }}" "https://$NODE:8006/api2/json/nodes/{{ hostvars[groups['proxmox'][0]].inventory_hostname }}/qemu/$VMID/agent/network-get-interfaces" || true
+  register: ga
+  retries: "{{ retries }}"
+  delay: "{{ delay }}"
+  until: ga.stdout is search("ip-address")
+  ignore_errors: true
+
+- name: Parse IP from guest agent output
+  set_fact:
+    vm_ip: "{{ (ga.stdout | regex_findall('\\d+\\.\\d+\\.\\d+\\.\\d+') | first) if ga.stdout is defined else None }}"
+
+- name: Add dynamic host for provisioning
+  add_host:
+    name: "vm-{{ proxmox_create.vmid }}"
+    ansible_host: "{{ vm_ip | default('127.0.0.1') }}"
+    ansible_user: admin
+  when: vm_ip is defined

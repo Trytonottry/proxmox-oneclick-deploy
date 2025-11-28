@@ -1,0 +1,15 @@
+- name: Deploy billing, monitoring and traefik VMs + provision
+  hosts: "{{ groups['proxmox'][0] }}"
+  become: true
+  tasks:
+    - name: Create billing VM (role)
+      include_role:
+        name: billing
+
+    - name: Create monitoring VM (role)
+      include_role:
+        name: monitoring
+
+    - name: Create traefik VM (role)
+      include_role:
+        name: traefik

@@ -1,0 +1,56 @@
+version: "3.8"
+services:
+  panel:
+    build: .
+    image: panel-skeleton:latest
+    container_name: panel-backend
+    restart: always
+    env_file: ./env.backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - panel-data:/app/data
+    networks:
+      - web
+
+  worker:
+    image: panel-skeleton:latest
+    container_name: panel-worker
+    command: ["celery", "-A", "tasks.worker", "worker", "--loglevel=info", "--concurrency=2"]
+    env_file: ./env.backend
+    depends_on:
+      - db
+      - redis
+    networks:
+      - web
+
+  db:
+    image: postgres:15
+    container_name: panel-db
+    restart: always
+    env_file: ./env.db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - web
+
+  redis:
+    image: redis:7
+    container_name: panel-redis
+    restart: always
+    volumes:
+      - redisdata:/data
+    networks:
+      - web
+
+volumes:
+  panel-data:
+  pgdata:
+  redisdata:
+
+networks:
+  web:
+    external: false

@@ -1,0 +1,25 @@
+- name: ZFS snapshot and replication (one-shot)
+  hosts: proxmox
+  become: true
+  vars:
+    zpool_src: "{{ zpool_name }}"
+    zpool_dst_host: "backup1.example.com"
+    zpool_dst_pool: "rpool_backup"
+    datasets:
+      - "{{ zpool_name }}/vm/data"
+      - "{{ zpool_name }}/backups"
+  tasks:
+    - name: Create snapshot on datasets
+      shell: |
+        for ds in {{ datasets | join(' ') }}; do
+          zfs snapshot ${ds}@ansible-$(date +%Y%m%d%H%M%S)
+        done
+      args: /bin/bash
+
+    - name: Send latest snapshot to remote (initial simple send)
+      shell: |
+        for ds in {{ datasets | join(' ') }}; do
+          latest=$(zfs list -t snapshot -o name -s creation -r ${ds} | tail -n1)
+          zfs send ${latest} | ssh root@{{ zpool_dst_host }} "zfs receive -F {{ zpool_dst_pool }}/$(basename ${ds})"
+        done
+      args: /bin/bash

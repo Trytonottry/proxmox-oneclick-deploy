@@ -1,0 +1,13 @@
+---
+- name: Create game VM using create-vm role
+  include_role:
+    name: create-vm
+  vars:
+    vm_name: "{{ vm_name }}"
+    vm_cores: "{{ game_defaults[game].cores | default(2) }}"
+    vm_memory: "{{ game_defaults[game].memory | default(2048) }}"
+    vm_disk: "{{ game_defaults[game].disk | default(10) }}"
+
+- name: Provision game server - placeholder
+  debug:
+    msg: "After VM creation, install game server using provided scripts (install_minecraft.sh / install_factorio.sh)."

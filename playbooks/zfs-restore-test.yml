@@ -1,0 +1,22 @@
+- name: Test restore from backup (smoke test)
+  hosts: proxmox[0]
+  become: true
+  vars:
+    backup_pool: "rpool_backup"
+    test_prefix: "restore-test"
+  tasks:
+    - name: Find last snapshot
+      shell: zfs list -t snapshot -o name -s creation -r {{ backup_pool }}/vm/data | tail -n1
+      register: snapshot_name
+
+    - name: Clone snapshot to test dataset
+      shell: |
+        SNAP={{ snapshot_name.stdout }}
+        TESTDS={{ zpool_name }}/tests/{{ test_prefix }}-$(date +%s)
+        zfs clone $SNAP $TESTDS
+        echo $TESTDS
+      register: clone_ds
+
+    - name: Debug clone dataset
+      debug:
+        var: clone_ds.stdout

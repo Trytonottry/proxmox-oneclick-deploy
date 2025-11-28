@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+  grafana:
+    image: grafana/grafana:9
+    ports:
+      - "3000:3000"
+  alertmanager:
+    image: prom/alertmanager
+    ports:
+      - "9093:9093"

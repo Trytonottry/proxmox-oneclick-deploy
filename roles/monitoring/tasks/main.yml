@@ -1,0 +1,13 @@
+---
+- name: Create monitoring VM
+  include_role:
+    name: create-vm
+  vars:
+    vm_name: "monitoring"
+    vm_cores: 2
+    vm_memory: 4096
+    vm_disk: 30
+
+- name: Provision monitoring stack - placeholder for SSH provisioning after VM IP available
+  debug:
+    msg: "Provision monitoring: copy docker-compose and start Prometheus/Grafana/Alertmanager (see files in role)."
