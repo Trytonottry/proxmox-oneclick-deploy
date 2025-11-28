@@ -2,7 +2,7 @@
 ![Ansible](https://img.shields.io/badge/ansible-automation-red?logo=ansible)
 ![Proxmox](https://img.shields.io/badge/proxmox-cluster-orange?logo=proxmox)
 ![ZFS](https://img.shields.io/badge/storage-ZFS-blue?logo=ubuntu)
-![License](https://img.shields.io/badge/license-MIT-green)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![FastAPI](https://img.shields.io/badge/backend-FastAPI-009688?logo=fastapi)
 ![Traefik](https://img.shields.io/badge/reverse_proxy-Traefik-2F9EBE?logo=traefik)
 ![Docker](https://img.shields.io/badge/docker-containers-2496ED?logo=docker)
