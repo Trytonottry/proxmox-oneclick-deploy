@@ -1,0 +1,5 @@
+- name: Apply hardening measures on proxmox nodes
+  hosts: proxmox
+  become: true
+  roles:
+    - hardening
