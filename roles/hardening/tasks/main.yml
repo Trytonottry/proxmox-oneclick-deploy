@@ -1,0 +1,57 @@
+---
+- name: Ensure 'ansible' user exists
+  user:
+    name: ansible
+    shell: /bin/bash
+    groups: sudo
+    create_home: yes
+    state: present
+
+- name: Add authorized_keys for ansible user if provided
+  copy:
+    src: files/ansible_authorized_keys
+    dest: /home/ansible/.ssh/authorized_keys
+    owner: ansible
+    group: ansible
+    mode: '0600'
+  ignore_errors: true
+
+- name: Install fail2ban and ufw
+  apt:
+    name:
+      - fail2ban
+      - ufw
+    state: present
+    update_cache: yes
+
+- name: Configure UFW default rules (deny incoming)
+  ufw:
+    state: enabled
+    policy: deny
+
+- name: Allow SSH and HTTP/HTTPS in UFW
+  ufw:
+    rule: allow
+    name: "{{ item }}"
+  loop:
+    - OpenSSH
+    - '80'
+    - '443'
+
+- name: Ensure fail2ban running
+  service:
+    name: fail2ban
+    state: started
+    enabled: yes
+
+- name: Disable root SSH login
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin'
+    line: 'PermitRootLogin no'
+    create: yes
+
+- name: Restart ssh
+  service:
+    name: ssh
+    state: restarted
